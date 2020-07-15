@@ -1,12 +1,14 @@
 {
     "name": "hyperway",
     "description": "Tiny router for Hyperapp",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "license": "MIT",
     "repository": "alpacone/hyperway",
     "author": "Maxim Samburskiy",
     "source": "src/index.js",
     "esmodule": "dist/hyperway.js",
+    "main": "src/index.js",
+    "unpkg": "dist/hyperway.js",
     "private": false,
     "scripts": {
         "build": "microbundle build --raw",
