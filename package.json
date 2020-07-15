@@ -1,24 +1,32 @@
 {
     "name": "hyperway",
     "description": "Tiny router for Hyperapp",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "license": "MIT",
     "repository": "alpacone/hyperway",
     "author": "Maxim Samburskiy",
+    "main": "dist/hyperway.js",
+    "module": "dist/hyperway.module.js",
+    "umd:main": "dist/hyperway.umd.js",
     "source": "src/index.js",
-    "esmodule": "dist/hyperway.js",
-    "main": "src/index.js",
-    "unpkg": "dist/hyperway.js",
-    "private": false,
+    "unpkg": "dist/hyperway.umd.js",
+    "files": [
+        "src",
+        "dist",
+        "README.md",
+        "package.json"
+    ],
     "scripts": {
-        "build": "microbundle build --raw",
-        "dev": "microbundle watch",
+        "clean": "rimraf dist",
+        "build": "npm run clean && microbundle build --raw",
+        "dev": "npm run clean && microbundle watch",
         "deploy": "npm run build && npm publish"
     },
     "dependencies": {
         "regexparam": "^1.3.0"
     },
     "devDependencies": {
-        "microbundle": "^0.12.3"
+        "microbundle": "^0.12.3",
+        "rimraf": "^3.0.2"
     }
 }

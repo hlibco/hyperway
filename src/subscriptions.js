@@ -1,6 +1,6 @@
 import convert from 'regexparam'
 
-import { addHistoryEvent, NAVIGATE_EVENT } from './helpers'
+import { NAVIGATE_EVENT } from './helpers'
 
 let setupRouter = (dispatch, props) => {
     let routes = props.routes.map(r => ({ ...r, ...convert(r.path) }))
@@ -18,6 +18,7 @@ let setupRouter = (dispatch, props) => {
     let routeTo = (path, replace) => {
         if (path[0] === '/' && !re.test(path)) path = baseUrl + path
         history[(path === currentPath || replace ? 'replace' : 'push') + 'State'](path, null, path)
+        findRoute()
     }
 
     let onNavigate = ({ detail }) => routeTo(detail.path, detail.replace)
@@ -54,18 +55,12 @@ let setupRouter = (dispatch, props) => {
         }
     }
 
-    addHistoryEvent('push')
-    addHistoryEvent('replace')
     addEventListener(NAVIGATE_EVENT, onNavigate)
     addEventListener('popstate', findRoute)
-    addEventListener('replacestate', findRoute)
-    addEventListener('pushstate', findRoute)
     setTimeout(() => findRoute(), 0)
 
     return () => {
         removeEventListener('popstate', findRoute)
-        removeEventListener('replacestate', findRoute)
-        removeEventListener('pushstate', findRoute)
         removeEventListener(NAVIGATE_EVENT, onNavigate)
     }
 }
