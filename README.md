@@ -12,17 +12,17 @@ import { Hyperway, handleLinkClick } from 'https://unpkg.com/hyperway'
 
 app({
     init: {},
-    view: state => h('div', {}, text('Demo')),
+    view: state => h('div', { onclick: handleLinkClick('/users/123/delete') }, text('Click here')),
     subscriptions: state => [
         // just one subscription
         Hyperway({
             // called if not path found (optional)
-            onNotFound: (state, props) =>{
+            onNotFound: (state, props) => {
                 console.log('NOT FOUND', state, props)
                 return state
             },
             // called on every path change (optional)
-            onRoute: (state, props) =>{
+            onRoute: (state, props) => {
                 console.log('ROUTE', state, props)
                 return state
             },
