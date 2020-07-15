@@ -1,0 +1,12 @@
+.idea/
+.vscode/
+
+*.log*
+*.xml
+node_modules
+package-lock.json
+coverage
+
+*.gz
+dist/
+.DS_STORE
