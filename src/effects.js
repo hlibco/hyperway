@@ -6,7 +6,7 @@ let emitNavigateEvent = (_, { path, replace, event: e }) => {
     emitEvent(NAVIGATE_EVENT, { path, replace })
 }
 
-export let handleLinkClick = (to = '/', replace = false) => (state, event) => [
+export let routeTo = (to = '/', replace = false) => (state, event) => [
     state,
     [
         emitNavigateEvent,

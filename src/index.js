@@ -1,2 +1,2 @@
-export { handleLinkClick } from './effects'
+export { routeTo } from './effects'
 export { Hyperway } from './subscriptions'
