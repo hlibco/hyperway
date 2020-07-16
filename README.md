@@ -10,21 +10,29 @@
 import { h, text, app } from "https://unpkg.com/hyperapp"
 import { Hyperway, handleLinkClick } from 'https://unpkg.com/hyperway'
 
+let Link = ({ to }, t) => h('div', { onclick: handleLinkClick(to) }, text(t))
+
 app({
-    init: {},
-    view: state => h('div', { onclick: handleLinkClick('/users/123/delete') }, text('Click here')),
+    init: {
+        url: '',
+        params: {}
+    },
+    view: state => h('div', {}, [
+        h('div', {}, [text(`You are on "${state.url}" and params are ${JSON.stringify(state.params)}`)]),
+        Link({ to: '/' }, 'Go to /'),
+        Link({ to: '/users/123/delete' }, 'Go to /users/123/delete'),
+        Link({ to: '/users/123' }, 'Go to /users/123'),
+        Link({ to: '/public/img/logo.png' }, 'Go to /public/img/logo.png')
+    ]),
     subscriptions: state => [
-        // just one subscription
         Hyperway({
-            // called if not path found (optional)
             onNotFound: (state, props) => {
-                console.log('NOT FOUND', state, props)
+                console.log('NOT FOUND', props)
                 return state
             },
-            // called on every path change (optional)
             onRoute: (state, props) => {
-                console.log('ROUTE', state, props)
-                return state
+                console.log('ROUTE', props)
+                return { ...state, url: props.path, params: props.params }
             },
             routes: [
                 {

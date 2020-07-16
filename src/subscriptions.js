@@ -31,22 +31,22 @@ let setupRouter = (dispatch, props) => {
                 let route = routes[i], arr = route.pattern.exec(path)
                 if (arr) {
                     let params = {}
-                    for (i=0; i < route.keys.length;) {
+                    for (i = 0; i < route.keys.length;) {
                         params[route.keys[i]] = arr[++i] || null;
                     }
 
                     if (currentRoute.onLeave) {
-                        dispatch(currentRoute.onLeave, currentRoute)
+                        dispatch(currentRoute.onLeave, { path: currentRoute.path, params: currentRoute.params })
                     }
 
                     if (props.onRoute) {
-                        dispatch(props.onRoute, {params})
+                        dispatch(props.onRoute, { path: route.path, params })
                     }
 
-                    currentRoute = {params}
+                    currentRoute = { ...route, params }
 
                     if (currentRoute.onEnter) {
-                        dispatch(currentRoute.onEnter, {params})
+                        dispatch(currentRoute.onEnter, { path: currentRoute.path, params: currentRoute.params })
                     }
                     return
                 }
