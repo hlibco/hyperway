@@ -2,8 +2,12 @@ import convert from 'regexparam'
 
 import { NAVIGATE_EVENT } from './helpers'
 
-let setupRouter = (dispatch, props) => {
-    let routes = props.routes.map(r => ({ ...r, ...convert(r.path) }))
+let setupRouter = (dispatch, {reducer, props}) => {
+    let routes = Object.entries(props.routes).map((r) => ({
+        ...(typeof r[1] === "function" ? { view: r[1] } : {...r[1], view: r[1].component}),
+        path: r[0],
+        ...convert(r[0])
+    }))
     let baseUrl = props.baseUrl || '/'
     let re = baseUrl === '/' ? /^\/+/ : new RegExp('^\\' + baseUrl + '(?=\\/|$)\\/?', 'i')
     let currentRoute = {}
@@ -35,23 +39,38 @@ let setupRouter = (dispatch, props) => {
                         params[route.keys[i]] = arr[++i] || null;
                     }
 
+                    const nextRoute = { ...route, params }
+
+                    // stop execution if route has not changed
+                    if (currentRoute.path === nextRoute.path) {
+                        return
+                    }
+
+                    // execute onLeave hooks
+                    if (props.onLeave) {
+                        dispatch(props.onLeave, { path: currentRoute.path, params: currentRoute.params })
+                    }
                     if (currentRoute.onLeave) {
                         dispatch(currentRoute.onLeave, { path: currentRoute.path, params: currentRoute.params })
                     }
 
-                    if (props.onRoute) {
-                        dispatch(props.onRoute, { path: route.path, params })
+                    dispatch(reducer(nextRoute));
+
+                    // execute onEnter hooks
+                    if (props.onEnter) {
+                        dispatch(props.onEnter, { path: nextRoute.path, params: nextRoute.params });
+                    }
+                    if (nextRoute.onEnter) {
+                        dispatch(nextRoute.onEnter, { path: nextRoute.path, params: nextRoute.params })
                     }
 
-                    currentRoute = { ...route, params }
-
-                    if (currentRoute.onEnter) {
-                        dispatch(currentRoute.onEnter, { path: currentRoute.path, params: currentRoute.params })
-                    }
+                    currentRoute = {...nextRoute};
                     return
                 }
             }
-            if (props.onNotFound) dispatch(props.onNotFound, path)
+
+            // page not found
+            if (props['*']) dispatch(props['*'], path)
         }
     }
 
@@ -65,4 +84,9 @@ let setupRouter = (dispatch, props) => {
     }
 }
 
-export let Hyperway = props => [setupRouter, props]
+export let Hyperway = {
+    init: () => ({
+        view: function () {}
+    }),
+    subscribe: (reducer, props) => [setupRouter, { reducer, props }]
+}
