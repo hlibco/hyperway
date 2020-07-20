@@ -72,7 +72,7 @@
             init: {
                 // Router is the key in the state where Hyperway will operate on.
                 // If you change the name, remember to update the subscription.
-                router: Hyperway.init(hyperway)
+                router: Hyperway.init()
             },
             view: state => h('div', {}, [
                 Link({ to: '/' }, 'Go to /'),
