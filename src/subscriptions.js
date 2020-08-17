@@ -41,8 +41,9 @@ let setupRouter = (dispatch, {reducer, props}) => {
 
                     const nextRoute = { ...route, params }
 
-                    // stop execution if route has not changed
-                    if (currentRoute.path === nextRoute.path) {
+                    // stop execution if route and params have not changed
+                    if (currentRoute.path === nextRoute.path &&
+                        currentRoute.keys.every(k => currentRoute.params[k] === nextRoute.params[k])) {
                         return
                     }
 
